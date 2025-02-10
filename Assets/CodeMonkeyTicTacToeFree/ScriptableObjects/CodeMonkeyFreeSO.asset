@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d777d270cee3a5c419cb21a828556f1a, type: 3}
+  m_Name: CodeMonkeyFreeSO
+  m_EditorClassIdentifier: 
+  currentVersion: 1.00
+  subtype: tictactoengofree
+  lastShownTimestamp: 1739099150
+  lastUpdateResponse:
+    version: 1.00
+    versionUrl: https://unitycodemonkey.com
+  checkedLastUpdateTimestamp: 1739109493
+  lastQOTDResponse:
+    questionId: 149
+    questionText: Which namespace do we need to use File.WriteAllText()?
+    answerA: using System;
+    answerB: using UnityEngine;
+    answerC: using System.IO;
+    answerD: using UnityEngine.UI;
+    answerE: 
+  lastQotdTimestamp: 1739109493
+  lastDynamicHeaderResponse:
+    topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/Gif_FreeCourses.gif
+    topText: Learn Unity and C# with my Complete FREE Courses!
+    topLink: freecourses
+    bottomText: My 10+ Years of C# Knowledge in 1 Course!
+    bottomLink: csharpcourse
+  lastDynamicHeaderTimestamp: 1739109493
+  websiteLatestMessage:
+    text: <a href="https://cmonkey.co/tictactoenfefree">I just published my latest
+      FREE course! Click here!</a>
+  websiteLatestMessageTimestamp: 1739109493
+  websiteLatestVideos:
+    videos:
+    - youTubeId: DiXQJXz8FOM
+      title: TOP 10 C# things you MIGHT not know (I didn't!)
+    - youTubeId: 7xYkle9adR8
+      title: TOP 20 Visual Assets to INSPIRE YOU! (JANUARY 2025)
+    - youTubeId: -3EVvJ8kr1U
+      title: Learn Netcode for Entities (FREE Course, SUPER FAST Multiplayer with
+        Unity DOTS)
+    - youTubeId: O7ta2WObdxc
+      title: Another FREE Course Incoming!
+  websiteLatestVideosTimestamp: 1739109493
