@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "CodeMonkey_NetcodeForGameObjects.sln"
+    "dotnet.defaultSolution": "CodeMonkey_NetworkForGameObjects.sln"
 }

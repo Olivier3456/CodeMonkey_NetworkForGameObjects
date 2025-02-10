@@ -8,6 +8,8 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance { get; private set; }
 
     public event EventHandler<OnClickedOnGridPositionEventArgs> OnClickedOnGridPosition;
+    public event EventHandler OnGameStarted;
+    public event EventHandler OnCurrentPlayablePlayerTypeChanged;
 
     public class OnClickedOnGridPositionEventArgs : EventArgs
     {
@@ -18,6 +20,8 @@ public class GameManager : NetworkBehaviour
 
     public enum PlayerType { None, Cross, Circle }
     private PlayerType localPlayerType;
+
+    private PlayerType currentPlayablePlayerType;
 
 
     private void Awake()
@@ -34,6 +38,7 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+
     public override void OnNetworkSpawn()
     {
         Debug.Log($"OnNetworkSpawn: {NetworkManager.Singleton.LocalClientId}.");
@@ -46,14 +51,62 @@ public class GameManager : NetworkBehaviour
         {
             localPlayerType = PlayerType.Circle;
         }
+
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+        }
     }
 
-
-    public void ClickedOnGridPosition(int x, int y)
+    private void NetworkManager_OnClientConnectedCallback(ulong obj)
     {
-        Debug.Log($"Clicked on grid position {x}, {y}.");
-        OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs() { x = x, y = y, playerType = GetLocalPlayertType() });
+        if (NetworkManager.Singleton.ConnectedClientsList.Count == 2)
+        {
+            currentPlayablePlayerType = PlayerType.Cross;
+            TriggerOnGameStartedRpc();
+        }
     }
 
-    public PlayerType GetLocalPlayertType() => localPlayerType;
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnGameStartedRpc()
+    {
+        OnGameStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+
+    [Rpc(SendTo.Server)]
+    public void ClickedOnGridPositionRpc(int x, int y, PlayerType playerType)
+    {
+        Debug.Log($"Clicked on grid position {x}, {y}. Is it server? {IsServer}.");
+
+        if (playerType != currentPlayablePlayerType)
+        {
+            return;
+        }
+
+        OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs() { x = x, y = y, playerType = playerType });
+
+        if (currentPlayablePlayerType == PlayerType.Cross)
+        {
+            currentPlayablePlayerType = PlayerType.Circle;
+        }
+        else if (currentPlayablePlayerType == PlayerType.Circle)
+        {
+            currentPlayablePlayerType = PlayerType.Cross;
+        }
+
+        TriggerOnCurrentPlayablePlayerTypeChangedRpc();
+    }
+
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnCurrentPlayablePlayerTypeChangedRpc()
+    {
+        OnCurrentPlayablePlayerTypeChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+
+    public PlayerType GetLocalPlayerType() => localPlayerType;
+    public PlayerType GetCurrentPlayablePlayerType() => currentPlayablePlayerType;
 }
