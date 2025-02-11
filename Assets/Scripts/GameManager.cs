@@ -204,14 +204,17 @@ public class GameManager : NetworkBehaviour
 
     private void TestWinner()
     {
-        foreach (Line line in lineList)
+        for (int i = 0; i < lineList.Count; i++)
         {
-            if (TestWinnerLine(line))
+            Line line = lineList[i];
             {
-                Debug.Log("Winner!");
-                currentPlayablePlayerType.Value = PlayerType.None;
-                TriggerOnGameWinRpc(line);
-                break;
+                if (TestWinnerLine(line))
+                {
+                    Debug.Log("Winner!");
+                    currentPlayablePlayerType.Value = PlayerType.None;
+                    TriggerOnGameWinRpc(i, playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y]);
+                    break;
+                }
             }
         }
     }
@@ -225,7 +228,7 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    private bool TestWinnerLine(int lineIndex)
+    private bool TestWinnerLine(Line line)
     {
         return TestWinnerLine(playerTypeArray[line.gridVector2IntList[0].x, line.gridVector2IntList[0].y],
                               playerTypeArray[line.gridVector2IntList[1].x, line.gridVector2IntList[1].y],
@@ -234,12 +237,14 @@ public class GameManager : NetworkBehaviour
 
 
     [Rpc(SendTo.ClientsAndHost)]    // for the event to be sent for both Host and Client sides
-    public void TriggerOnGameWinRpc(Line line)
+    public void TriggerOnGameWinRpc(int lineIndex, PlayerType winPlayerType)
     {
+        Line line = lineList[lineIndex];
+
         OnGameWin?.Invoke(this, new OnGameWinEventArgs
         {
             line = line,
-            winPlayerType = playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y]
+            winPlayerType = winPlayerType
         });
     }
 
