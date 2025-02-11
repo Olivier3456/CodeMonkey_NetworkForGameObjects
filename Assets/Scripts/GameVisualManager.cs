@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,10 +12,21 @@ public class GameVisualManager : NetworkBehaviour
     [SerializeField] private Transform circlePrefab;
     [SerializeField] private Transform lineCompletePrefab;
 
-    void Start()
+
+    private List<GameObject> visualGameObjectList;
+
+
+    private void Awake()
+    {
+        visualGameObjectList = new List<GameObject>();
+    }
+
+
+    private void Start()
     {
         GameManager.Instance.OnClickedOnGridPosition += GameManagerOnClickedOnGridPosition;
         GameManager.Instance.OnGameWin += GameManager_OnGameWin;
+        GameManager.Instance.OnRematch += GameManager_OnRematch;
     }
 
 
@@ -45,6 +57,24 @@ public class GameVisualManager : NetworkBehaviour
                                                       Quaternion.Euler(0, 0, eulerZ));
 
         lineCompleteTransform.GetComponent<NetworkObject>().Spawn(true); // pour que ça spawne aussi chez les clients
+        visualGameObjectList.Add(lineCompleteTransform.gameObject);
+    }
+
+
+    private void GameManager_OnRematch(object sender, EventArgs e)
+    {
+        // This event is sent for both Host and Clients, but we only want to destroy gameObject in Host side:
+        // Theses gameObjects are NetworkObjects, so they will be destroyed for both sides if Server destroys it.
+        // However, we don't need this check, because Client side, visualGameObjectList is empty, but we add it just for the logic.
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
+        foreach (GameObject go in visualGameObjectList)
+        {
+            Destroy(go);
+        }
     }
 
 
@@ -64,6 +94,7 @@ public class GameVisualManager : NetworkBehaviour
 
         Transform spawnedTransform = Instantiate(prefab, GetGridWorldPosition(x, y), Quaternion.identity);
         spawnedTransform.GetComponent<NetworkObject>().Spawn(true); // pour que ça spawne aussi chez les clients
+        visualGameObjectList.Add(spawnedTransform.gameObject);
     }
 
 

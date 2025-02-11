@@ -12,6 +12,7 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnGameStarted;
     public event EventHandler OnCurrentPlayablePlayerTypeChanged;
     public event EventHandler<OnGameWinEventArgs> OnGameWin;
+    public event EventHandler OnRematch;
 
     public class OnClickedOnGridPositionEventArgs : EventArgs
     {
@@ -247,6 +248,31 @@ public class GameManager : NetworkBehaviour
             winPlayerType = winPlayerType
         });
     }
+
+
+    [Rpc(SendTo.Server)]
+    public void RematchRpc()
+    {
+        for (int x = 0; x < playerTypeArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < playerTypeArray.GetLength(1); y++)
+            {
+                playerTypeArray[x, y] = PlayerType.None;
+            }
+        }
+
+        currentPlayablePlayerType.Value = PlayerType.Cross;
+
+        TriggerOnRematchRpc();
+    }
+
+
+    [Rpc(SendTo.ClientsAndHost)] // this event need to be sent both sides Host and Clients => see GameOverUI
+    private void TriggerOnRematchRpc()
+    {
+        OnRematch?.Invoke(this, EventArgs.Empty);
+    }
+
 
 
     public PlayerType GetLocalPlayerType() => localPlayerType;
