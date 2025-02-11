@@ -3122,6 +3122,7 @@ MonoBehaviour:
   gameOverText: {fileID: 281413864}
   winColor: {r: 0.083731, g: 0.7924528, b: 0, a: 1}
   loseColor: {r: 1, g: 0, b: 0, a: 1}
+  tieColor: {r: 0.74213827, g: 0.74213827, b: 0.74213827, a: 1}
   rematchButton: {fileID: 814978282}
 --- !u!1 &1816568535
 GameObject:
