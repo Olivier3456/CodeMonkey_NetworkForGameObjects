@@ -14,6 +14,7 @@ public class GameManager : NetworkBehaviour
     public event EventHandler<OnGameWinEventArgs> OnGameWin;
     public event EventHandler OnRematch;
     public event EventHandler OnGameTied;
+    public event EventHandler OnScoreChanged;
 
     public class OnClickedOnGridPositionEventArgs : EventArgs
     {
@@ -31,7 +32,7 @@ public class GameManager : NetworkBehaviour
     public enum PlayerType { None, Cross, Circle }
     private PlayerType localPlayerType;
 
-    private NetworkVariable<PlayerType> currentPlayablePlayerType = new NetworkVariable<PlayerType>();
+    private NetworkVariable<PlayerType> currentPlayablePlayerType = new NetworkVariable<PlayerType>();  // don't forget to initialize NetworkVariables at declaration
 
     private PlayerType[,] playerTypeArray;
 
@@ -46,6 +47,10 @@ public class GameManager : NetworkBehaviour
         public Vector2Int centerGridPosition;
         public Orientation orientation;
     }
+
+
+    private NetworkVariable<int> playerCrossScore = new NetworkVariable<int>(); // don't forget to initialize NetworkVariables at declaration
+    private NetworkVariable<int> playerCircleScore = new NetworkVariable<int>();
 
 
     private void Awake()
@@ -136,6 +141,17 @@ public class GameManager : NetworkBehaviour
         }
 
         currentPlayablePlayerType.OnValueChanged += CurrentPlayablePlayerType_OnValueChanged;
+
+        // we want to the value of the NetworkVariale to be effectively changed before using it
+        playerCrossScore.OnValueChanged += (int previousScore, int newScore) =>
+        {
+            OnScoreChanged?.Invoke(this, EventArgs.Empty);
+        };
+
+        playerCircleScore.OnValueChanged += (int previousScore, int newScore) =>
+        {
+            OnScoreChanged?.Invoke(this, EventArgs.Empty);
+        };
     }
 
     private void CurrentPlayablePlayerType_OnValueChanged(PlayerType oldPlayerType, PlayerType newPlayerType)
@@ -214,7 +230,20 @@ public class GameManager : NetworkBehaviour
                 {
                     Debug.Log("Winner!");
                     currentPlayablePlayerType.Value = PlayerType.None;
-                    TriggerOnGameWinRpc(i, playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y]);
+
+                    PlayerType winPlayerType = playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y];
+
+                    switch (winPlayerType)
+                    {
+                        case PlayerType.Cross:
+                            playerCrossScore.Value++;
+                            break;
+                        case PlayerType.Circle:
+                            playerCircleScore.Value++;
+                            break;
+                    }
+
+                    TriggerOnGameWinRpc(i, winPlayerType);
                     return;
                 }
             }
@@ -302,6 +331,12 @@ public class GameManager : NetworkBehaviour
 
 
 
+
     public PlayerType GetLocalPlayerType() => localPlayerType;
     public PlayerType GetCurrentPlayablePlayerType() => currentPlayablePlayerType.Value;
+    public void GetScores(out int playerCrossScore, out int playerCircleScore)
+    {
+        playerCrossScore = this.playerCrossScore.Value;
+        playerCircleScore = this.playerCircleScore.Value;
+    }
 }
