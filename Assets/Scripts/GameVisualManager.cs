@@ -13,7 +13,7 @@ public class GameVisualManager : NetworkBehaviour
     [SerializeField] private Transform lineCompletePrefab;
 
 
-    // for Relay: enabling games visuals when both players connected to the relay
+    // for Relay: enabling game visuals when both players connected to the relay
     [SerializeField] private GameObject gameVisualMainObject;
     [SerializeField] private GameObject relayConnectionVisualObject;
 
@@ -33,12 +33,12 @@ public class GameVisualManager : NetworkBehaviour
         GameManager.Instance.OnGameWin += GameManager_OnGameWin;
         GameManager.Instance.OnRematch += GameManager_OnRematch;
 
-        // for Relay: enabling games visuals when both players connected to the relay
+        // for Relay: enabling game visuals when both players connected to the relay
         GameManager.Instance.OnGameStarted += GameManager_OnGameStarted;
     }
 
 
-    // for Relay: enabling games visuals when both players connected to the relay
+    // for Relay: enabling game visuals when both players connected to the relay
     private void GameManager_OnGameStarted(object sender, EventArgs e)
     {
         gameVisualMainObject.SetActive(true);
