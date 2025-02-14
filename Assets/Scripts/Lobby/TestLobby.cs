@@ -15,6 +15,24 @@ public class TestLobby : MonoBehaviour
 
     private float lobbyUpdateTimer;
 
+    private const string KEY_GAME_MODE = "Game Mode";
+    private const string KEY_START_GAME = "Start Game";
+
+
+    private bool IsLobbyHost()
+    {
+        if (joinedLobby == null)
+        {
+            Debug.Log("IsLobbyHost - Lobby is null!");
+            return false;
+        }
+
+        return joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
+
+
+    [SerializeField] private Relay relay;
+
 
     private async void Start()
     {
@@ -47,7 +65,10 @@ public class TestLobby : MonoBehaviour
                 Data = new Dictionary<string, DataObject>
                 {                    
                     // La visibilité doit être publique pour pouvoir être vue de l'extérieur du lobby.
-                    {"Game Mode", new DataObject(DataObject.VisibilityOptions.Public, "Capture The Flag")}
+                    {KEY_GAME_MODE, new DataObject(DataObject.VisibilityOptions.Public, "Capture The Flag")},
+
+                    // Pour pouvoir prévenir les joueurs quand la partie commence.
+                    {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, "0")}
                 }
             };
 
@@ -168,13 +189,19 @@ public class TestLobby : MonoBehaviour
 
     public async void UpdateLobbyGameMode(string gameMode)
     {
+        if (!IsLobbyHost())
+        {
+            Debug.Log("Can't update lobby, this player is not the host!");
+            return;
+        }
+
         try
         {
             UpdateLobbyOptions updateLobbyOptions = new UpdateLobbyOptions
             {
                 Data = new Dictionary<string, DataObject>
                 {
-                    { "Game Mode", new DataObject(DataObject.VisibilityOptions.Member, gameMode)}
+                    { KEY_GAME_MODE, new DataObject(DataObject.VisibilityOptions.Member, gameMode)}
                 }
             };
 
@@ -209,7 +236,7 @@ public class TestLobby : MonoBehaviour
                     {
                         {"PlayerName",
                         new PlayerDataObject(
-                                PlayerDataObject.VisibilityOptions.Public,
+                                PlayerDataObject.VisibilityOptions.Member,
                                 playerName)}
                     }
                 });
@@ -272,6 +299,11 @@ public class TestLobby : MonoBehaviour
 
     public async void MigrateLobbyHost()
     {
+        if (!IsLobbyHost())
+        {
+            Debug.Log("Can't migrate Lobby Host, player is not the  host!");
+        }
+
         try
         {
             UpdateLobbyOptions updateLobbyOptions = new UpdateLobbyOptions
@@ -281,6 +313,7 @@ public class TestLobby : MonoBehaviour
             };
             hostLobby = await Lobbies.Instance.UpdateLobbyAsync(hostLobby.Id, updateLobbyOptions);
             joinedLobby = hostLobby;
+            hostLobby = null;
 
             PrintPlayers();
         }
@@ -309,6 +342,8 @@ public class TestLobby : MonoBehaviour
         HandlerLobbyHeartBeat();
         HandleLobbyPollForUpdates();
     }
+
+
     private async void HandlerLobbyHeartBeat()
     {
         if (hostLobby == null)
@@ -345,6 +380,54 @@ public class TestLobby : MonoBehaviour
 
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
             joinedLobby = lobby;
+
+            // Handle the game start
+            if (joinedLobby.Data[KEY_START_GAME].Value != "0")
+            {
+                Debug.Log("Game Started! Joining relay, if player not the Host...");
+
+                if (!IsLobbyHost()) // Because lobby host already joined relay: see CreateRelay() in Relay class
+                {
+                    Debug.Log("Player is not the Host. Joining relay...");
+                    relay.JoinRelay(joinedLobby.Data[KEY_START_GAME].Value);
+                }
+                else
+                {
+                    Debug.Log("Player is the Host, relay is already joigned.");
+                }
+
+                joinedLobby = null;
+            }
+        }
+    }
+
+
+    public async void StartGame()
+    {
+        if (!IsLobbyHost())
+        {
+            Debug.Log("Can't start game, player is not the host!");
+            return;
+        }
+
+        try
+        {
+            string relayCode = await relay.CreateRelay();
+
+            Lobby lobby = await Lobbies.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                    {
+                        // players wait this key to start game
+                        {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, relayCode)}
+                    }
+            });
+
+            joinedLobby = lobby;
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
         }
     }
 }

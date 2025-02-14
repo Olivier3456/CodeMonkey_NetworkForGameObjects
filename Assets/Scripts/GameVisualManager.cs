@@ -16,6 +16,7 @@ public class GameVisualManager : NetworkBehaviour
     // for Relay: enabling game visuals when both players connected to the relay
     [SerializeField] private GameObject gameVisualMainObject;
     [SerializeField] private GameObject relayConnectionVisualObject;
+    [SerializeField] private GameObject LobbyVisualObject;
 
 
     private List<GameObject> visualGameObjectList;
@@ -43,6 +44,7 @@ public class GameVisualManager : NetworkBehaviour
     {
         gameVisualMainObject.SetActive(true);
         relayConnectionVisualObject.SetActive(false);
+        LobbyVisualObject.SetActive(false);
     }
 
 

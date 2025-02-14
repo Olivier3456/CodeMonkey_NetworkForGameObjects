@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -9,22 +10,21 @@ using UnityEngine;
 
 public class Relay : MonoBehaviour
 {
-    private async void Start()
+    // private async void Start()
+    // {
+    //     // initilization is exactly the same as for the lobby
+
+    //     await UnityServices.InitializeAsync();
+
+    //     AuthenticationService.Instance.SignedIn += () =>
+    //     { Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId); };
+
+    //     await AuthenticationService.Instance.SignInAnonymouslyAsync();
+    // }
+
+
+    public async Task<string> CreateRelay()
     {
-        // initilization is exactly the same as for the lobby
-
-        await UnityServices.InitializeAsync();
-
-        AuthenticationService.Instance.SignedIn += () =>
-        { Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId); };
-
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-    }
-
-
-    public async void CreateRelay()
-    {
-        // any relay function can throw an exception, and break our game
         try
         {
             // max number of players, without counting the host
@@ -42,11 +42,13 @@ public class Relay : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartHost();
-            //JoinRelay(joinCode);
+
+            return joinCode;
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
+            return null;
         }
     }
 
