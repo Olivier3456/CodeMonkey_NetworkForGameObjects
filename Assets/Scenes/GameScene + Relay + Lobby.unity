@@ -669,6 +669,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 146039152}
   m_CullTransparentMesh: 1
+--- !u!1 &173725325 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8923572389475558507, guid: d9eae02a6a7045c488bfc0d52489b99e, type: 3}
+  m_PrefabInstance: {fileID: 1600508095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &208313745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1124,7 +1129,7 @@ MonoBehaviour:
   lineCompletePrefab: {fileID: 4134767599613158964, guid: 8447d38810d09d448b7c6a5735ce7528, type: 3}
   gameVisualMainObject: {fileID: 260849049}
   relayConnectionVisualObject: {fileID: 976717613}
-  LobbyVisualObject: {fileID: 1119797564}
+  lobbyVisualObject: {fileID: 173725325}
 --- !u!4 &352035159
 Transform:
   m_ObjectHideFlags: 0
@@ -2682,11 +2687,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112062741}
   m_CullTransparentMesh: 1
---- !u!1 &1119797564 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5540256232824849399, guid: d9eae02a6a7045c488bfc0d52489b99e, type: 3}
-  m_PrefabInstance: {fileID: 1600508095}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1162350710
 GameObject:
   m_ObjectHideFlags: 0
@@ -2995,9 +2995,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1600508096}
-        m_TargetAssemblyTypeName: TestLobby, Assembly-CSharp
-        m_MethodName: StartGame
+      - m_Target: {fileID: 1508234754}
+        m_TargetAssemblyTypeName: StartGameButton, Assembly-CSharp
+        m_MethodName: StartGame_Button
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3406,10 +3406,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1508234749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f73b70dc015b3a478e578aed36c45c1, type: 3}
+  m_Script: {fileID: 11500000, guid: a7cf18c115264fb49a4f9b204cf06622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relay: {fileID: 235177711}
+  startGameButtonGameObject: {fileID: 1297686389}
+  gameManager: {fileID: 1889901083}
+  testLobby: {fileID: 1600508096}
 --- !u!1 &1540507124
 GameObject:
   m_ObjectHideFlags: 0
@@ -3624,7 +3626,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7667384423104917278, guid: d9eae02a6a7045c488bfc0d52489b99e, type: 3}
   m_PrefabInstance: {fileID: 1600508095}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1119797564}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f61827a21461114489998aa46a7ec7c, type: 3}

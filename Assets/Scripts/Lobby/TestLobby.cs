@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
@@ -17,6 +18,10 @@ public class TestLobby : MonoBehaviour
 
     private const string KEY_GAME_MODE = "Game Mode";
     private const string KEY_START_GAME = "Start Game";
+
+
+    public event EventHandler OnGameReadyToStart;
+
 
 
     private bool IsLobbyHost()
@@ -45,7 +50,7 @@ public class TestLobby : MonoBehaviour
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-        playerName = "Le Joueur Pro " + Random.Range(0, 9999);
+        playerName = "Le Joueur Pro " + UnityEngine.Random.Range(0, 9999);
         Debug.Log($"Player Name: {playerName}.");
     }
 
@@ -381,7 +386,19 @@ public class TestLobby : MonoBehaviour
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
             joinedLobby = lobby;
 
-            // Handle the game start
+
+            // handle ready to start game condition
+            if (IsLobbyHost())
+            {
+                if (joinedLobby.Players.Count == 2)
+                {
+                    Debug.Log("Game Ready to start!");
+                    OnGameReadyToStart?.Invoke(this, EventArgs.Empty);
+                }
+            }
+
+
+            // Handle game start
             if (joinedLobby.Data[KEY_START_GAME].Value != "0")
             {
                 Debug.Log("Game Started! Joining relay, if player not the Host...");

@@ -166,6 +166,9 @@ public class GameManager : NetworkBehaviour
         if (NetworkManager.Singleton.ConnectedClientsList.Count == 2)
         {
             currentPlayablePlayerType.Value = PlayerType.Cross;
+
+            Debug.Log("Game ready to start!");
+
             TriggerOnGameStartedRpc();
         }
     }
