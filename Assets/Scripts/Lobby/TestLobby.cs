@@ -174,7 +174,7 @@ public class TestLobby : MonoBehaviour
             {
                 Data = new Dictionary<string, DataObject>
                 {
-                    { "Game Mode", new DataObject(DataObject.VisibilityOptions.Public, gameMode)}
+                    { "Game Mode", new DataObject(DataObject.VisibilityOptions.Member, gameMode)}
                 }
             };
 
