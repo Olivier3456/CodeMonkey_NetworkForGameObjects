@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 5541236440325322035}
   - component: {fileID: 6189875144067961188}
   m_Layer: 0
-  m_Name: Lobby Buttons
+  m_Name: Lobby Buttons Script
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1408,7 +1408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6066021262070866747
 Transform:
   m_ObjectHideFlags: 0

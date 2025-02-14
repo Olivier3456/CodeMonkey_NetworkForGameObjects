@@ -181,7 +181,7 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void ClickedOnGridPositionRpc(int x, int y, PlayerType playerType)
     {
-        Debug.Log($"Clicked on grid position {x}, {y}. Is it server? {IsServer}.");
+        // Debug.Log($"Clicked on grid position {x}, {y}. Is it server? {IsServer}.");
 
         if (playerType != currentPlayablePlayerType.Value)
         {
