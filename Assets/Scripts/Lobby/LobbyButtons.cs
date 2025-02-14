@@ -10,13 +10,13 @@ public class LobbyButtons : MonoBehaviour
     public void QuickJoinLobbyButton() => testLobby.QuickJoinLobby();
     public void PrintPlayersButton() => testLobby.PrintPlayers();
     public void UpdateLobbyGameModeButton() => testLobby.UpdateLobbyGameMode("Death Match");
-    public void UpdatePlayerName()
+    public void UpdatePlayerNameButton()
     {
         string newName = "Changed Name";
         testLobby.UpdatePlayerName(newName + Random.Range(0, 9999));
     }
-    public void LeaveLobby() => testLobby.LeaveLobby();
-    public void KickPlayer() => testLobby.KickPlayer();
+    public void LeaveLobbyButton() => testLobby.LeaveLobby();
+    public void KickPlayerButton() => testLobby.KickPlayer();
     public void MigrateLobbyHostButton() => testLobby.MigrateLobbyHost();
     public void DeleteLobbyButton() => testLobby.DeleteLobby();
 }
