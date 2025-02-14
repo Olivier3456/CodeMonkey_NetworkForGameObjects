@@ -106,47 +106,6 @@ public class TestLobby : MonoBehaviour
     }
 
 
-    public async void ListLobbies()
-    {
-        try
-        {
-            // Voir les classes QueryLobbiesOptions et QueryFilter pour avoir plus de détails
-            // sur les options possibles.
-            QueryLobbiesOptions queryLobbiesOptions = new QueryLobbiesOptions
-            {
-                // nombre de résultats à retourner
-                Count = 25,
-
-                Filters = new List<QueryFilter>
-                {
-                    // GT = greater than, donc notre filtre = plus que 0 places disponibles
-                    // (la valeur (ici 0) doit être au format string)
-                    new QueryFilter(QueryFilter.FieldOptions.AvailableSlots,
-                                    "0",
-                                    QueryFilter.OpOptions.GT),
-                },
-
-                Order = new List<QueryOrder>
-                {
-                    // false pour ascending, Created pour date de création
-                    // donc ici, on classe par ordre descendant de création
-                    new QueryOrder(false, QueryOrder.FieldOptions.Created)
-                }
-            };
-
-            QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(queryLobbiesOptions);
-
-            Debug.Log("Lobbies found: " + queryResponse.Results.Count);
-            foreach (Lobby lobby in queryResponse.Results)
-                Debug.Log($"Lobby name: {lobby.Name} with game mode: {lobby.Data["Game Mode"].Value}.");
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-    }
-
-
     public async void JoinLobbyByCode(string lobbyCode)
     {
         try
@@ -168,6 +127,7 @@ public class TestLobby : MonoBehaviour
             Debug.Log(e);
         }
     }
+
 
     public async void QuickJoinLobby()
     {
@@ -318,7 +278,48 @@ public class TestLobby : MonoBehaviour
 
 
 
-    // Optional functions 
+    // OPTIONAL FUNCTIONS
+    public async void ListLobbies()
+    {
+        try
+        {
+            // Voir les classes QueryLobbiesOptions et QueryFilter pour avoir plus de détails
+            // sur les options possibles.
+            QueryLobbiesOptions queryLobbiesOptions = new QueryLobbiesOptions
+            {
+                // nombre de résultats à retourner
+                Count = 25,
+
+                Filters = new List<QueryFilter>
+                {
+                    // GT = greater than, donc notre filtre = plus que 0 places disponibles
+                    // (la valeur (ici 0) doit être au format string)
+                    new QueryFilter(QueryFilter.FieldOptions.AvailableSlots,
+                                    "0",
+                                    QueryFilter.OpOptions.GT),
+                },
+
+                Order = new List<QueryOrder>
+                {
+                    // false pour ascending, Created pour date de création
+                    // donc ici, on classe par ordre descendant de création
+                    new QueryOrder(false, QueryOrder.FieldOptions.Created)
+                }
+            };
+
+            QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(queryLobbiesOptions);
+
+            Debug.Log("Lobbies found: " + queryResponse.Results.Count);
+            foreach (Lobby lobby in queryResponse.Results)
+                Debug.Log($"Lobby name: {lobby.Name} with game mode: {lobby.Data["Game Mode"].Value}.");
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+
     public async void UpdateLobbyGameMode(string gameMode)
     {
         if (!IsLobbyHost())

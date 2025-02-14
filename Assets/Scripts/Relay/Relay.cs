@@ -10,6 +10,7 @@ using UnityEngine;
 
 public class Relay : MonoBehaviour
 {
+    // Authentication is now done in Lobby
     // private async void Start()
     // {
     //     // initilization is exactly the same as for the lobby

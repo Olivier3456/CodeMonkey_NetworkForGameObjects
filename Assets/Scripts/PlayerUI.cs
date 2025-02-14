@@ -25,13 +25,11 @@ public class PlayerUI : MonoBehaviour
     {
         GameManager.Instance.OnGameStarted += GameManager_OnGameStarted;
         GameManager.Instance.OnCurrentPlayablePlayerTypeChanged += GameManager_OnCurrentPlayablePlayerTypeChanged;
-        //GameManager.Instance.OnGameWin += GameManager_OnGameWin;
         GameManager.Instance.OnScoreChanged += GameManager_OnScoreChanged;
 
         playerCrossScoreText.text = "";
         playerCircleScoreText.text = "";
     }
-
 
 
     private void GameManager_OnGameStarted(object sender, EventArgs e)
@@ -58,21 +56,12 @@ public class PlayerUI : MonoBehaviour
     }
 
 
-    // private void GameManager_OnGameWin(object sender, GameManager.OnGameWinEventArgs e)
-    // {
-        
-    // }
-
-
     private void GameManager_OnScoreChanged(object sender, EventArgs e)
     {
         GameManager.Instance.GetScores(out int playerCrossScore, out int playerCircleScore);
         playerCrossScoreText.text = playerCrossScore.ToString();
         playerCircleScoreText.text = playerCircleScore.ToString();
     }
-
-
-
 
 
     private void UpdateCurrentArrow()
