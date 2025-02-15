@@ -213,6 +213,18 @@ public class TestLobby : MonoBehaviour
             joinedLobby = lobby;
 
 
+            if (!IsPlayerInLobby())
+            {
+                // Player was kicked out of this lobby
+                Debug.Log("Kicked from Lobby!");
+
+                //OnKickedFromLobby?.Invoke(this, new LobbyEventArgs { lobby = joinedLobby });
+
+                joinedLobby = null;
+                return;
+            }
+
+
             // handle ready to start game condition
             if (IsLobbyHost())
             {
@@ -242,6 +254,23 @@ public class TestLobby : MonoBehaviour
                 joinedLobby = null;
             }
         }
+    }
+
+
+    private bool IsPlayerInLobby()
+    {
+        if (joinedLobby != null && joinedLobby.Players != null)
+        {
+            foreach (Player player in joinedLobby.Players)
+            {
+                if (player.Id == AuthenticationService.Instance.PlayerId)
+                {
+                    // This player is in this lobby
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
